@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialProductState: ProductArrayModel={
     all_products:[],
+    user_products_cart: [],
     product: {
         "created_date": "",
         "id": 0,
@@ -23,6 +24,9 @@ const ProductSlice = createSlice({
         },
         setProduct(state,action:PayloadAction<ProductModel>){
             state.product=action.payload;
+        },
+        setUserProductsCart(state, action: PayloadAction<ProductModel[]>){
+            state.user_products_cart=action.payload;
         }
     }
 })

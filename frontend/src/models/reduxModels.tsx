@@ -9,6 +9,7 @@ export interface ProductModel {
 }
 
 export interface ProductArrayModel{
+    user_products_cart: ProductModel[],
     all_products: ProductModel[],
     product: ProductModel
 }

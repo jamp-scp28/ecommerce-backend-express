@@ -48,7 +48,7 @@ product.post("/addtocart/:id", passport.authenticate('jwt', { session: false }),
     const product_id = req.params.id;
     const n_items = req.body.quantity; 
 
-    console.log(user.id, product_id, n_items)
+    console.log('addtocartdata',user.id, product_id, n_items)
 
     const sql_statement = "select * from addProductToCart($1, $2, $3);" // $1 -> product_id, $2 -> # items, $3 -> user_id
 
@@ -62,11 +62,10 @@ product.post("/addtocart/:id", passport.authenticate('jwt', { session: false }),
     })
 })
 
-product.get("/user/cart", passport.authenticate('jwt', { session: false }), async (req: express.Request, res: express.Response) => {
+product.get("/user/cart/", passport.authenticate('jwt', { session: false }), async (req: express.Request, res: express.Response) => {
     const user: any = req.user;
-    console.log('user', user)
-    const sql_statement = 
-    `
+    logger.info('user trying to get cart info', user)
+    const sql_statement =`
     with user_cart as (
 	    select c.id, c.user_id, pc.product_id, pc.items from carts c left join product_cart pc on c.id = pc.cart_id
     )
@@ -76,11 +75,11 @@ product.get("/user/cart", passport.authenticate('jwt', { session: false }), asyn
     WHERE uc.user_id = $1;
     `
     productService.executeQuery(sql_statement,[user.id],(data: any)=>{
-        console.log(data);
+        logger.info('user cart data: ', data);
         if (data && data.length > 0 ){
             return res.status(200).json({data})
         }else {
-            return res.status(301).send('could not retrieve data...')
+            return res.status(301).send({"data": data, "user": user})
         }
     })
 })

@@ -26,13 +26,13 @@ const genToken = (id: number, email: string, role: string) => {
 
 auth.post('/login', async function (req: express.Request, res: express.Response) {
     const {email, password} = req.body;
-
+    console.log(email, password);
     const sql_statement = "select u.username, u.id, u.email, ur.role, password from users u left join user_roles ur on u.id = ur.user_id where u.email = $1;"
 
     await userDB.executeQuery(sql_statement, [email], (userData: any)=>{
-        console.log('users',userData[0].password);
-        console.log('cryppass', password);
         if(userData && userData.length > 0 && password){
+            console.log('cryppass', password);
+            console.log('users',userData[0].password);
             bcrypt.compare(password, userData[0].password, (err: any, isValid: boolean)=>{
 
                 if(err){

@@ -1,4 +1,6 @@
 html{
+  width: 100vh;
+  height: auto;
   overflow-x: hidden;
 }
 

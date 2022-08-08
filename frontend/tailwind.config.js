@@ -13,7 +13,8 @@ module.exports = {
         'brown': '#c17d44',
         'bluex2': '#009ac0',
         'golden': '#e5bf7e',
-        'blueDark': '#041424'
+        'blueDark': '#041424',
+        'red': '#ff8000'
       },
     },
   },
