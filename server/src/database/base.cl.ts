@@ -29,4 +29,4 @@ executeWrite = async (sql_statement: string, params: any) => {
 
 }
 
-export default baseClass
+export default baseClass;

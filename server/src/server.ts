@@ -8,9 +8,8 @@ import passport from "passport"
 import 'dotenv/config';
 import cluster from "cluster";
 import logger from "./utils/logger";
-import productRoutes from "./routes/products.r";
-import authRoutes from "./routes/auth.r";
-import {applyPassportStrategy} from "./store/passport_opt";
+import indexRoutes from "./routes/index.r";
+import {applyPassportStrategy} from "./utils/passport_opt";
 
 //createProduct();
 
@@ -70,8 +69,7 @@ app.get('/info',(req: any, res: any)=>{
 })
 
 // Set Routes
-app.use('/api/v1/products', productRoutes)
-app.use("/api/v1/auth", authRoutes)
+app.use('/api/v1', indexRoutes)
 
 const PORT = config.PORT || process.env.PORT || '8081';
 

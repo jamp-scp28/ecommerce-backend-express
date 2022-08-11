@@ -1,5 +1,5 @@
 import { Strategy, ExtractJwt, JwtFromRequestFunction } from 'passport-jwt';
-import baseClass from "../database/baseClass";
+import baseClass from "../database/base.cl";
 const userDB = new baseClass();
 
 interface Options {

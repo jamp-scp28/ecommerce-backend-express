@@ -1,5 +1,4 @@
 import { faker } from '@faker-js/faker';
-import { productDB } from '../utils/crudClasses';
 
 export interface Product{
     timestamp: Date
@@ -30,7 +29,6 @@ const createProducts = (qnt: number) => {
 const generateFakeProducts = async () => {
     let products: Array<Product> = createProducts(10);
     products.forEach((product: Product) => {
-        productDB.insertRecord(product);
     })
 
     console.log('Products inserted sucessfully...')
