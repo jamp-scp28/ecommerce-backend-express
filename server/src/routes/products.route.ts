@@ -9,7 +9,7 @@ import {
     userCheckoutController,
     updateProductController,
     deleteProductController
- } from "../controllers/products.c";
+ } from "../controllers/products.controller";
 
 const product = Router();
 

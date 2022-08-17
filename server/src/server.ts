@@ -8,7 +8,7 @@ import passport from "passport"
 import 'dotenv/config';
 import cluster from "cluster";
 import logger from "./utils/logger";
-import indexRoutes from "./routes/index.r";
+import indexRoutes from "./routes/index.route";
 import {applyPassportStrategy} from "./utils/passport_opt";
 
 //createProduct();

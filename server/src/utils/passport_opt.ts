@@ -1,6 +1,7 @@
 import { Strategy, ExtractJwt, JwtFromRequestFunction } from 'passport-jwt';
-import baseClass from "../database/base.cl";
-const userDB = new baseClass();
+import { AuthDAO } from '../database/auth.dao';
+
+const userDB = new AuthDAO();
 
 interface Options {
     jwtFromRequest: JwtFromRequestFunction,

@@ -3,7 +3,7 @@ import {
     loginController,
     registerController,
     logoutController
-} from "../controllers/auth.c";
+} from "../controllers/auth.controller";
 
 const auth = Router();
 

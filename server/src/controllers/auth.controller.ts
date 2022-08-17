@@ -1,12 +1,13 @@
-import baseClass from "../database/base.cl";
 import logger from "../utils/logger";
 import express from "express";
 import {UserRegistration, sendMail} from "../utils/mailConfig";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import encryptPass from "../utils/encryptPass";
+import { AuthDAO } from "../database/auth.dao";
 
-const userDB = new baseClass();
+const userDB = new AuthDAO();
+
 const genToken = (id: number, email: string, role: string) => {
   return jwt.sign({
     iss: 'jamp-ecommerce',
