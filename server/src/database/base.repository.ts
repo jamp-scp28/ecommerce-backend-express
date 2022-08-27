@@ -1,9 +1,9 @@
-import { IRead, IWrite } from "../utils/interfaces";
-import pool from "../utils/pgConnect";
+import { IRead, IWrite } from "../interfaces/interfaces";
+import pool from "./connector/pgConnect";
 
 export abstract class BaseRepository<T> implements IRead<T>{
 
-    pool: any;
+    public pool: any;
 
     constructor() {
         this.pool = pool;  

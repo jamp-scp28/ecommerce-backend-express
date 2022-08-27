@@ -1,5 +1,5 @@
-import {ProductDTO} from "../database/models/product.dto";
-import {messageDTO} from "../database/models/message.dto";
+import {ProductDTO} from "../models/product.dto";
+import {messageDTO} from "../models/message.dto";
 
 interface IProductDao{
     getProducts(): Promise<ProductDTO[]>;

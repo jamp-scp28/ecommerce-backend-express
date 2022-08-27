@@ -1,6 +1,6 @@
 import { QueryResult } from "pg";
-import { messageDTO } from "./models/message.dto";
-import logger from "../utils/logger";
+import { messageDTO } from "../models/message.dto";
+import logger from "../rest/utils/logger/logger";
 import { BaseRepository } from "./base.repository";
 
 export class messageDao extends BaseRepository<messageDao> {

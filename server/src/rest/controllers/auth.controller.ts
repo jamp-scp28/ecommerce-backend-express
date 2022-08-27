@@ -1,10 +1,10 @@
-import logger from "../utils/logger";
+import logger from "../utils/logger/logger";
 import express from "express";
-import {UserRegistration, sendMail} from "../utils/mailConfig";
+import {UserRegistration, sendMail} from "../utils/config/mailConfig";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import encryptPass from "../utils/encryptPass";
-import { AuthDAO } from "../database/auth.dao";
+import encryptPass from "../utils/config/encryptPass";
+import { AuthDAO } from "../../database/auth.dao";
 
 const userDB = new AuthDAO();
 

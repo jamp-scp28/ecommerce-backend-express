@@ -7,9 +7,9 @@ import mongoStore from "connect-mongo";
 import passport from "passport"
 import 'dotenv/config';
 import cluster from "cluster";
-import logger from "./utils/logger";
-import indexRoutes from "./routes/index.route";
-import {applyPassportStrategy} from "./utils/passport_opt";
+import logger from "./rest/utils/logger/logger";
+import indexRoutes from "./rest/routes/index.route";
+import {applyPassportStrategy} from "./rest/utils/config/passport_opt";
 
 //createProduct();
 

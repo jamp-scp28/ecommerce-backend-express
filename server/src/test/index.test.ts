@@ -1,7 +1,7 @@
 import DatabaseFactory from "../database/db.factory";
 import { expect } from "chai";
 import request from "supertest";
-import logger from "../utils/logger";
+import logger from "../rest/utils/logger/logger";
 import axios from "axios";
 import { response } from "express";
 import exp from "constants";

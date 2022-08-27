@@ -1,7 +1,7 @@
-import logger from "../utils/logger";
+import logger from "../utils/logger/logger";
 import express from "express";
-import { messageDTO } from "../database/models/message.dto";
-import DatabaseFactory from "../database/db.factory";
+import { messageDTO } from "../../models/message.dto";
+import DatabaseFactory from "../../database/db.factory";
 
 const messageDAO: any = DatabaseFactory("message");
 

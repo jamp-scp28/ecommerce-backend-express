@@ -1,5 +1,5 @@
 import { Strategy, ExtractJwt, JwtFromRequestFunction } from 'passport-jwt';
-import { AuthDAO } from '../database/auth.dao';
+import { AuthDAO } from '../../../database/auth.dao';
 
 const userDB = new AuthDAO();
 
