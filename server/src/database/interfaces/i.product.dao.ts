@@ -23,6 +23,12 @@ export interface IProductDao {
 
     getUserCart(user_id: number): Promise<string>;
 
+    userCheckout(userId: number): Promise<string>;
+
+    updateProduct(userId: number, data: Partial<ProductDTO>): Promise<string>;
+
+    deleteProduct(productId: string): Promise<any>;
+
     mapProductResponse(response: QueryResult): ProductDTO[];
 
 }

@@ -10,10 +10,13 @@ import cluster from "cluster";
 import logger from "./rest/utils/logger/logger";
 import indexRoutes from "./rest/routes/index.route";
 import {applyPassportStrategy} from "./rest/utils/config/passport_opt";
+import { productDao } from "./database/product.dao";
+import { IProductDao } from "./database/interfaces/i.product.dao";
+import { graphqlHTTP } from "express-graphql";
+import { graphqlSchema } from "./graphql/schemas";
+import { ProductDTO } from "./models/product.dto";
 
-//createProduct();
-
-const config = require('./utils/config');
+const productDaoService: IProductDao = new productDao();
 
 //Interface definition
 declare global {
@@ -71,6 +74,12 @@ app.get('/info',(req: any, res: any)=>{
 // Set Routes
 app.use('/api/v1', indexRoutes)
 
-const PORT = config.PORT || process.env.PORT || '8081';
+app.use('/graphql', graphqlHTTP({
+    schema: graphqlSchema,
+    rootValue: productDaoService,
+    graphiql: true
+}))
 
-app.listen(PORT,()=>{logger.info(`App up and running on port: ${config.PORT}`)});
+const PORT = process.env.PORT || '8081';
+
+app.listen(PORT,()=>{logger.info(`App up and running on port: ${PORT}`)});
