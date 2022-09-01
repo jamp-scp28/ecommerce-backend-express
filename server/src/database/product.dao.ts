@@ -20,20 +20,32 @@ export class productDao implements IProductDao {
         return this.mapProductResponse(response);
     }
 
-    public async getProductById(id: number): Promise<ProductDTO> {
+    public async getProductById(data: {id: number}): Promise<ProductDTO> {
+        console.log('receiving id request', data.id)
         const sql_statement = "SELECT * FROM products where id = $1";
-        const response = await this.datasource.query(sql_statement, [id]);
+        const response = await this.datasource.query(sql_statement, [data.id]);
         logger.info(response.rows);
         return this.mapProductResponse(response)[0];
     }
 
-    public async createProduct(product_name: string, description: string, code: string, price: number, photo: string, stock: number): Promise<any> {
+    public async createProduct(data: {product: ProductDTO}): Promise<any> {
+        const {product_name, description, code, stock, price, photo} = data.product;
         const sql_statement = "select * from createProduct($1, $2, $3, $4, $5, $6);"
+        const response = await this.datasource.query(sql_statement, [product_name, description, code, price, photo, stock]);
+        return {id: response.rows[0].createproduct};
+    }
+    
+    /*old version of endpoint
+    public async createProducts(product_name: string, description: string, code: string, price: number, photo: string, stock: number): Promise<any> {
+        console.log('receiving request to crate product...')
+        console.log(product_name, description, code, price, photo, stock)
+        const sql_statement = "select * from createProduct($1, $2, $3, $4, $5, $6);"
+
         const response = await this.datasource.query(sql_statement, [product_name, description, code, price, photo, stock]);
         logger.info(response);
         const respo = {product_name, description, code, price, photo, stock}
         return respo;
-    }
+    }*/
 
     public async addProductToCart(product_id: number, n_items: number, user_id: number): Promise<string> {
         const sql_statement = "select * from addProductToCart($1, $2, $3);"
@@ -63,19 +75,18 @@ export class productDao implements IProductDao {
         return response
     }
 
-    public async updateProduct(userId: number, data: Partial<ProductDTO>) {
-        const sql_statement = "UPDATE products SET name = $1, description = $2, code = $3, stock = $4, price = $5, photo = $6 WHERE id = $7";
-        const {product_name, description, code, price, photo} = data; 
-        const response = await this.datasource.query(sql_statement,[product_name,description,code,price,photo,userId])
-        return response
+    public async updateProduct(data: {id: number, product: Partial<ProductDTO>}): Promise<ProductDTO> {
+        const sql_statement = "UPDATE products SET product_name = $1, description = $2, code = $3, price = $4, photo = $5 WHERE id = $6 RETURNING *";
+        const {product_name, description, code, price, photo} = data.product; 
+        const response = await this.datasource.query(sql_statement,[product_name,description,code,price,photo,data.id])
+        console.log(response.rows[0])
+        return response.rows[0]
     }
 
-    public async deleteProduct(productId: string) {
-
-        const sql_statement = "DELETE FROM products WHERE id = $1"
-        const response = await this.datasource.query(sql_statement,[productId]);
-        return response;
-        
+    public async deleteProduct(data: {productId: number}) {
+        const sql_statement = "DELETE FROM products WHERE id = $1 RETURNING *"
+        const response = await this.datasource.query(sql_statement,[data.productId]);
+        return response.rows[0];
     }
 
     public mapProductResponse = (response: QueryResult): ProductDTO[] =>

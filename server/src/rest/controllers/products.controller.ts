@@ -27,17 +27,16 @@ export class ProductController {
     public getProductById = async (req: express.Request, res: express.Response)=>{
         logger.info('GET /products/:id');
         const id = parseInt(req.params.id);
-        const response: ProductDTO = await this.productDAO.getProductById(id); 
+        const response: ProductDTO = await this.productDAO.getProductById({id: id}); 
         res.json(response)
     }
 
     public createProduct = async (req: express.Request, res: express.Response)=>{
         logger.info('POST /createProduct');
         const user: any = req.user;
-        const {product_name, description, code, stock, price, photo} = req.body;
 
         if (user && user.role === "admin"){
-            const response: string = await this.productDAO.createProduct(product_name, description, code, price, photo, stock);
+            const response: number = await this.productDAO.createProduct(req.body);
             res.status(200).json(response)
         }
         else {
@@ -72,15 +71,16 @@ export class ProductController {
 
     public updateProduct = async (req: express.Request, res: express.Response)=>{
         logger.info('PUT /updateProduct');
-        const user: any = req.user;
-        const id = req.params.id;
-        const response = await this.productDAO.updateProduct(user.id, req.body); 
+        const id = parseInt(req.params.id);
+        const product = req.body;
+        const data = {id, product}
+        const response = await this.productDAO.updateProduct(data); 
     }
 
     public deleteProduct = async (req: express.Request, res: express.Response)=>{
         logger.info('DELETE /deleteProduct');
         const user: any = req.user;
-        const productId = req.params.id;
+        const productId = {productId: parseInt(req.params.id)};
         const response = await this.productDAO.deleteProduct(productId)
         res.send({response}) 
     }

@@ -5,15 +5,9 @@ export interface IProductDao {
     
     getProducts(): Promise<ProductDTO[]>;
     
-    getProductById(id: number): Promise<ProductDTO>;
+    getProductById(data: {id: number}): Promise<ProductDTO>;
     
-    createProduct(
-        product_name: string,
-        description: string,
-        code: string,
-        price: number,
-        photo: string,
-        stock: number): Promise<string>;
+    createProduct(data: {product: ProductDTO}): Promise<number>;
     
     addProductToCart(
         product_id: number,
@@ -25,9 +19,9 @@ export interface IProductDao {
 
     userCheckout(userId: number): Promise<string>;
 
-    updateProduct(userId: number, data: Partial<ProductDTO>): Promise<string>;
+    updateProduct(data: {id: number, product: Partial<ProductDTO>}): Promise<ProductDTO>;
 
-    deleteProduct(productId: string): Promise<any>;
+    deleteProduct(data: {productId: number}): Promise<ProductDTO>;
 
     mapProductResponse(response: QueryResult): ProductDTO[];
 
