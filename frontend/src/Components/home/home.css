@@ -1,0 +1,40 @@
+
+.parallax {
+    perspective: 100px;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    top: 0%;
+    left: 0;
+    right: 0;
+  }
+  
+  .parallax__layer {
+    top: 0;
+    right: 0;
+    bottom: 5%;
+    left: 0;
+  
+  }
+  
+  .parallax__layer img {
+    display: block;
+    position: absolute;
+    bottom: 0;
+  }
+
+  .parallax__cover {
+    background: #2d112b;
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 2000px;
+    z-index: 2;
+  }
+  
+  .custom-img {
+    background-image: url("https://firebasestorage.googleapis.com/v0/b/myprojects-37d11.appspot.com/o/ride.legal%2Fbg.jpeg?alt=media&token=fa5e328b-4415-4fb7-9ddd-1c18e6c15bf6");
+  }
+  

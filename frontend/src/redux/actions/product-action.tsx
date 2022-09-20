@@ -3,7 +3,11 @@ import { AnyAction } from "redux";
 import { ThunkAction } from "@reduxjs/toolkit";
 import { RootState } from "../reduxStore";
 import { ProductModel } from "../../models/reduxModels";
+<<<<<<< HEAD
 import {getProducts} from "../../services/productService";
+=======
+import getProducts from "../../services/productService";
+>>>>>>> d0499e5705034c6dd6a2d84094f01ec4e115f005
 import axios from "axios";
 
 export const productActions = ProductSlice.actions;
@@ -13,12 +17,17 @@ export const fetchProducts=(): ThunkAction<void,RootState,unknown,AnyAction>=>{
         if (getState().products.all_products.length === 0){
             const response: ProductModel[] = await axios.get(`http://localhost:8081/api/v1/products`)
             .then(res => {
+<<<<<<< HEAD
                 console.log('product data', res.data)
+=======
+                console.log('response', res)
+>>>>>>> d0499e5705034c6dd6a2d84094f01ec4e115f005
                 return res.data;
             });
             dispatch(productActions.setProducts(response));
         }
     }
+<<<<<<< HEAD
 }
 
 export const fetchUserCartProducts = (): ThunkAction<void, RootState, unknown, AnyAction>=>{
@@ -43,4 +52,6 @@ export const fetchUserCartProducts = (): ThunkAction<void, RootState, unknown, A
             dispatch(productActions.setUserProductsCart(response));
         }
     }
+=======
+>>>>>>> d0499e5705034c6dd6a2d84094f01ec4e115f005
 }

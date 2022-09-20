@@ -1,5 +1,8 @@
 import axios from "axios";
+<<<<<<< HEAD
 import { useAppSelector } from "../redux/hooks/hooks";
+=======
+>>>>>>> d0499e5705034c6dd6a2d84094f01ec4e115f005
 
 export const getProducts = async () => {
     axios.get(`http://localhost:8081/api/v1/products`)
@@ -9,6 +12,7 @@ export const getProducts = async () => {
     })
 }
 
+<<<<<<< HEAD
 export const addProductToCart = async (id: number, token: string) => {
   console.log('userTokenIs', token);
   const config = {
@@ -24,3 +28,6 @@ export const addProductToCart = async (id: number, token: string) => {
     console.log('adding to cart...')
   })
 }
+=======
+export default getProducts;
+>>>>>>> d0499e5705034c6dd6a2d84094f01ec4e115f005

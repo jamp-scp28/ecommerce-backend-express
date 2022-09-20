@@ -13,6 +13,7 @@ const StorePage = () =>{
     },[])
 
     return (
+<<<<<<< HEAD
         <div className="pt-[15%] w-screen h-screen text-white font-bold bg-teal-400 flex flex-col justify-center items-center">
             <ProductFilter />
             <div className="container px-6 mx-auto my-24">
@@ -29,6 +30,18 @@ const StorePage = () =>{
                         } 
                     </div>
                 </section>
+=======
+        <div className="pt-[15vh] w-screen h-screen text-white font-bold bg-legal flex flex-col justify-center items-center">
+            <ProductFilter />            
+            <div className="flex justify-center flex-row flex-between-2 p-2 m-2 w-full h-full bg-legal">
+            { 
+                allProducts.length === 0 ?
+                <h2>Loading...</h2> : 
+                allProducts!.map((product: any)=>(
+                    <ProductCard product_name={product.product_name} price={product.price} image={product.photo}/>
+                ))
+            }
+>>>>>>> d0499e5705034c6dd6a2d84094f01ec4e115f005
             </div>
         </div>
     )    

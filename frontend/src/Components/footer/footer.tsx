@@ -2,6 +2,7 @@ import { useState } from "react";
 
 function FooterComponent(){
     return(
+<<<<<<< HEAD
         <div className="w-screen px-3 py-5 antialiased bg-white lg:px-6">
             <div className="grid gap-10 row-gap-6 mb-8 sm:grid-cols-2 lg:grid-cols-4">
                 <div className="sm:col-span-2">
@@ -49,6 +50,10 @@ function FooterComponent(){
                     </div>
                 </div>
             </div>
+=======
+        <div className="w-full h-72 bg-teal-400">
+            footer
+>>>>>>> d0499e5705034c6dd6a2d84094f01ec4e115f005
         </div>
     )
 }

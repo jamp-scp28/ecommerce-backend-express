@@ -9,7 +9,10 @@ export interface ProductModel {
 }
 
 export interface ProductArrayModel{
+<<<<<<< HEAD
     user_products_cart: ProductModel[],
+=======
+>>>>>>> d0499e5705034c6dd6a2d84094f01ec4e115f005
     all_products: ProductModel[],
     product: ProductModel
 }

@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .navIcon{
+        @apply relative flex items-center justify-center
+        h-12 w-12 mt-4 mb-4 mx-auto
+        text-teal-600
+        hover:bg-teal-600 hover:text-white
+        rounded-3xl hover:rounded-xl
+        bg-gray-200
+        transition-all duration-300 ease-linear
+        cursor-pointer;
+    }
+    .tooltip{
+        @apply absolute z-30 w-auto p-2 m-2 min-w-max left-14
+        rounded-md shadow-md
+        text-white bg-gray-900
+        text-xs font-bold
+        transition-all duration-100 scale-0 origin-left;
+    }
+}
+
