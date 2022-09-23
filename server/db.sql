@@ -35,8 +35,14 @@ CREATE TABLE products (
   description text NOT NULL,
   code text NOT NULL,
   price float NOT NULL,
-  photo text NOT NULL
+  photo text NOT NULL,
+  category_id INT NOT NULL REFERENCES categories (id) ON DELETE CASCADE
 );
+
+CREATE TABLE categories(
+  id SERIAL PRIMARY KEY,
+  category_name TEXT NOT NULL
+)
 
 CREATE TABLE carts (
   id SERIAL PRIMARY KEY,
