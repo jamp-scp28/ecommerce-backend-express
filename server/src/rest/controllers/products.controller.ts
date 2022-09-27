@@ -62,12 +62,44 @@ export class ProductController {
         res.json(response)
     }
 
+
+    /**
+   * @openapi
+   * /api/v1/products/category/{category}:
+   *   get:
+   *     tags: [Products]
+   *     description: Get product by Category
+   *     parameters:
+   *       - in: path
+   *         name: category 
+   *         type: string
+   *         required: true
+   *         description: Category Name
+   *     responses:
+   *       200:
+   *         description: Session token
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: string
+   *       500:
+   *         $ref: '#/components/responses/500'
+   */ 
+    public getProductByCategory = async (req: express.Request, res: express.Response)=>{
+        logger.info('GET /products/:category');
+        const category: string = req.params.category
+        const response: Types.ProductDTO[] = await this.productDAO.getProductByCategory(category); 
+        res.json(response)
+    }
+
     /**
    * @openapi
    * /api/v1/products/create:
    *   post:
    *     tags: [Products]
-   *     description: Create a new product
+   *     description: Create a new product, please enter a valid category name from the available list
+   *     security:
+   *       - Authorization: []
    *     requestBody:
    *      content:
    *        application/json:
@@ -102,28 +134,38 @@ export class ProductController {
         logger.info('POST /createProduct');
         const user: any = req.user;
 
-        if (user && user.role === "admin"){
-            const response: number = await this.productDAO.createProduct(req.body);
-            res.status(200).json(response)
-        }
-        else {
-            res.status(401).send('Error creating the product.')
-        }
-    }
+        console.log('current user', user)
 
+        if (user){
+            const response: number = await this.productDAO.createProduct(req.body);
+            return res.status(200).json(response)
+        }
+
+        return res.status(401).json({response:'Error creating the product.'})
+    }
 
      /**
    * @openapi
    * /api/v1/products/addtocart/{id}:
    *   post:
-   *     tags: [Products]
+   *     tags: [Carts]
    *     description: Add product by ID, to current user cart
+   *     security:
+   *       - Authorization: []
    *     parameters:
    *       - in: path
    *         name: id 
    *         type: number
    *         required: true
    *         description: product ID
+   *     requestBody:
+   *      content:
+   *        application/json:
+   *          schema:
+   *            type: object
+   *            properties:
+   *              quantity:          
+   *                type: number
    *     responses:
    *       200:
    *         description: User Cart
@@ -146,10 +188,12 @@ export class ProductController {
 
         /**
    * @openapi
-   * /api/v1/user/cart/:
+   * /api/v1/products/user/cart:
    *   get:
-   *     tags: [Products]
+   *     tags: [Carts]
    *     description: Get User Cart
+   *     security:
+   *       - Authorization: []
    *     responses:
    *       200:
    *         description: User cart
@@ -172,8 +216,10 @@ export class ProductController {
    * @openapi
    * /api/v1/products/user/checkout:
    *   post:
-   *     tags: [Products]
-   *     description: Get product by ID
+   *     tags: [Carts]
+   *     description: Gets the user products in the cart and send them to orders 
+   *     security:
+   *       - Authorization: []
    *     responses:
    *       200:
    *         description: Session token
@@ -196,7 +242,9 @@ export class ProductController {
    * /api/v1/products/update/{id}:
    *   put:
    *     tags: [Products]
-   *     description: Create a new product
+   *     description: Update a product
+   *     security:
+   *       - Authorization: []
    *     parameters:
    *       - in: path
    *         name: id 
@@ -239,6 +287,10 @@ export class ProductController {
         const product = req.body;
         const data = {id, product}
         const response = await this.productDAO.updateProduct(data); 
+        if(response){
+            return res.status(200).json(response)
+        }
+        return res.status(500).json({response: 'Error updating the product'})
     }
 
     /**
@@ -247,6 +299,8 @@ export class ProductController {
    *   delete:
    *     tags: [Products]
    *     description: Delete product by ID
+   *     security:
+   *       - Authorization: []
    *     parameters:
    *       - in: path
    *         name: id 
@@ -265,10 +319,8 @@ export class ProductController {
    */
     public deleteProduct = async (req: express.Request, res: express.Response)=>{
         logger.info('DELETE /deleteProduct');
-        const user: any = req.user;
-        const productId = {productId: parseInt(req.params.id)};
+        const productId = parseInt(req.params.id);
         const response = await this.productDAO.deleteProduct(productId)
         res.send({response}) 
     }
-    
 }

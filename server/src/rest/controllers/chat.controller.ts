@@ -20,7 +20,7 @@ export class ChatController {
     public getChatByEmail = async (req: express.Request, res: express.Response)=>{
         logger.info('GET /chat/:email')
         const email: string = req.params.email
-        const response: Types.ChatDTO = await this.chatDAO.getChatByEmail(email); 
+        const response: Types.ChatDTO[] = await this.chatDAO.getChatByEmail(email) 
         res.json(response)
     }
 

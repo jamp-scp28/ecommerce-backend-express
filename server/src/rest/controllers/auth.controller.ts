@@ -99,12 +99,10 @@ export class AuthController {
         }
     }
 
-    public logout = (req: express.Request, res: express.Response) => {
-        req.session.destroy( error => {
-            if (error) {
-                res.send({status: 'Logout Error', body: error})
-            }
+    public logout = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+        req.logout(function(err) {
+            if (err) { return next(err); }
+            res.redirect('/');
         })
-        res.send('User logged out')
     }
 }

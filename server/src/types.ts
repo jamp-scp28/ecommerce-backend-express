@@ -47,7 +47,8 @@ export namespace Interfaces {
     export interface ProductDao {
         getProducts(): Promise<Types.ProductDTO[]>;
         getProductById(data: {id: number}): Promise<Types.ProductDTO>;
-        createProduct(data: {product: Types.ProductDTO}): Promise<number>;
+        getProductByCategory(category: string): Promise<Types.ProductDTO[]>;
+        createProduct(product: Types.ProductDTO): Promise<number>;
         addProductToCart(
             product_id: number,
             n_items: number,
@@ -57,7 +58,7 @@ export namespace Interfaces {
         getUserCart(user_id: number): Promise<string>;
         userCheckout(userId: number): Promise<string>;
         updateProduct(data: {id: number, product: Partial<Types.ProductDTO>}): Promise<Types.ProductDTO>;
-        deleteProduct(data: {productId: number}): Promise<Types.ProductDTO>;
+        deleteProduct(productId: number): Promise<string>;
         mapProductResponse(response: QueryResult): Types.ProductDTO[];
     }
 
@@ -70,7 +71,7 @@ export namespace Interfaces {
 
     export interface ChatDAO{
         getChats(): Promise<Types.ChatDTO[]>;
-        getChatByEmail(email: string): Promise<Types.ChatDTO>;
+        getChatByEmail(email: string): Promise<Types.ChatDTO[]>;
         createChat(newChat: Types.ChatDTO): Promise<number|string>;
         updateChat(id: number, chat: Partial<Types.ChatDTO>): Promise<Types.ChatDTO>;
         deleteChat(email: string): Promise<Types.ChatDTO>;

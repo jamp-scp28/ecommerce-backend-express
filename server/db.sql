@@ -3,7 +3,8 @@
 
 CREATE TABLE chat (
     id SERIAL PRIMARY KEY,
-    datime DATE DEFAULT CURRENT_TIMESTAMP,
+    type TEXT NOT NULL DEFAULT 'USER',
+    timestamp DATE DEFAULT CURRENT_TIMESTAMP,
     email TEXT NOT NULL,
     message TEXT NOT NULL
 )
@@ -43,8 +44,6 @@ CREATE TABLE products (
   category_id INT NOT NULL REFERENCES categories (id) ON DELETE CASCADE
 );
 
-
-
 CREATE TABLE carts (
   id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL,
@@ -59,12 +58,15 @@ CREATE TABLE product_cart (
   items INTEGER NOT NULL
 );
 
-CREATE TABLE sales_data (
+CREATE TABLE orders (
   id SERIAL PRIMARY KEY,
   sale_date DATE NOT NULL,
+  user_id INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+  cart_id INTEGER NOT NULL REFERENCES carts (id) ON DELETE CASCADE,
   product_id INTEGER NOT NULL REFERENCES products (id) ON DELETE CASCADE,
   items INTEGER NOT NULL,
-  price FLOAT NOT NULL
+  price FLOAT NOT NULL,
+  total FLOAT NOT NULL
 );
 
 
@@ -111,24 +113,27 @@ BEGIN
 END;
 $$ LANGUAGE PLPGSQL;
 
+
 CREATE OR REPLACE FUNCTION checkout(user_id INTEGER) RETURNS INTEGER AS
 $$
-declare
+DECLARE
   last_sale_id INTEGER;
 begin
-	insert into sales_data (sale_date, user_id, cart_id, product_id, items, price, total)
-	with user_cart as (
-		select c.id as cart_id, c.user_id, pc.product_id, pc.items from carts c left join product_cart pc on c.id = pc.cart_id
-	)
-	SELECT now(),uc.user_id, uc.cart_id, uc.product_id, uc.items, p.price, (p.price * uc.items) as total
-	FROM public.products p
-	left join user_cart uc on p.id = uc.product_id
-	where uc.user_id = $1;
-	select currval('sales_data_id_seq') INTO last_sale_id;
-	delete from product_cart where cart_id = (select distinct c.id from carts c left join product_cart pc on c.id = pc.cart_id where c.user_id = $1);
-  	return last_sale_id;
-end;
+  IF $1 IN (select u.id from users u left join carts c on u.id = c.user_id inner join product_cart pc on c.id = pc.cart_id) THEN
+    INSERT INTO orders (sale_date, user_id, cart_id, product_id, items, price, total)
+      SELECT now(),uc.user_id, uc.cart_id, uc.product_id, uc.items, p.price, (p.price * uc.items) as total
+      FROM public.products p
+      LEFT JOIN (SELECT c.id AS cart_id, c.user_id, pc.product_id, pc.items FROM carts c LEFT JOIN product_cart pc ON c.id = pc.cart_id) uc ON p.id = uc.product_id
+      WHERE uc.user_id = $1;
+      SELECT currval('orders_id_seq') INTO last_sale_id;
+      DELETE FROM product_cart WHERE cart_id = (SELECT DISTINCT c.id FROM carts c LEFT JOIN product_cart pc ON c.id = pc.cart_id WHERE c.user_id = $1);
+	  RETURN last_sale_id;
+  ELSE
+    RETURN 0;
+  END IF;
+END;
 $$ language plpgsql;
+
 
 
 CREATE OR REPLACE FUNCTION createProduct(
@@ -145,7 +150,12 @@ DECLARE
   last_product_id INTEGER;
   category_id INTEGER;
 BEGIN
-  SELECT id from categories WHERE name = $7 INTO category_id;
+  IF $7 IN (SELECT id FROM categories) THEN 
+    SELECT id from categories WHERE name = $7 INTO category_id;
+  ELSE
+    SELECT id from categories WHERE name = 'default' INTO category_id;
+  END IF
+
   INSERT INTO products (created_date, product_name, description, code, price, photo, category_id) 
     VALUES (now(),$1, $2, $3, $4, $5, category_id);
   SELECT currval('products_id_seq') INTO last_product_id;

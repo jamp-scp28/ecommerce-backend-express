@@ -1,5 +1,5 @@
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken"
+import bcrypt from "bcrypt"
 
 export function genToken(id: number, email: string, role: string){
     return jwt.sign({
@@ -14,12 +14,12 @@ export function genToken(id: number, email: string, role: string){
 
 export async function validateUser(password: string, userData: any){
     if(userData && password){
-        const validateResponse = await bcrypt.compare(password, userData.password);
+        const validateResponse = await bcrypt.compare(password, userData.password)
         console.log('val', validateResponse)
         if(validateResponse){
-            const token = genToken(userData.id, userData.email, userData.role);
-            return {userEmail: userData.email, token: token};
+            const token = genToken(userData.id, userData.email, userData.role)
+            return {userEmail: userData.email, token: token}
         }
     }
-    return { error: 'Could not login.'};
+    return { error: 'Could not login.'}
 }

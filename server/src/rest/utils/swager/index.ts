@@ -10,6 +10,13 @@ const swaggerDefinition: SwaggerJsdoc.SwaggerDefinition = {
         description
     },
     components: {
+        securitySchemes:{
+            Authorization: {
+                type: "http",
+                scheme: "bearer",
+                bearerFormat: "JWT"
+            }          
+        },
         responses: {
             204: { description: 'No content' },
             500: {

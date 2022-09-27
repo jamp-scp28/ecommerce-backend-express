@@ -13,20 +13,18 @@ export class chatDao implements chatDao{
     async getChats(): Promise<Types.ChatDTO[]> {
         const sql_statement = "SELECT * FROM chat";
         const response = await this.datasource.query(sql_statement, []);
-        logger.info(response.rows);
         return chatDao.mapChatResponse(response);
     }
 
-    async getChatByEmail(email: string): Promise<Types.ChatDTO> {
+    async getChatByEmail(email: string): Promise<Types.ChatDTO[]> {
         const sql_statement = "SELECT * FROM chat where email = $1";
         const response = await this.datasource.query(sql_statement, [email]);
-        logger.info(response.rows);
-        return chatDao.mapChatResponse(response)[0];
+        return chatDao.mapChatResponse(response)
     }
 
     async createChat(chat: Types.ChatDTO): Promise<string> {
         const {timestamp, email, message} = chat;
-        const sql_statement = "INSERT INTO chat (datime, email, message) VALUES($1, $2, $3);"
+        const sql_statement = "INSERT INTO chat (timestamp, email, message) VALUES($1, $2, $3);"
         const response = await this.datasource.query(sql_statement, [timestamp, email, message]);
         logger.info(response);
         return response.rows;

@@ -27,8 +27,21 @@ export class productDao implements Interfaces.ProductDao {
         return this.mapProductResponse(response)[0];
     }
 
-    public async createProduct(data: {product: Types.ProductDTO}): Promise<any> {
-        const {product_name, description, code, stock, price, photo, category} = data.product;
+    public async getProductByCategory(category:string): Promise<Types.ProductDTO[]> {
+        console.log('cat', category)
+        const sql_statement = `
+        select p.id, p.created_date, p.product_name, p.description, p.code, p.price, p.photo from products p
+        left join categories c on c.id = p.category_id
+        where c."name" = $1;
+        `
+        const response = await this.datasource.query(sql_statement, [category]);
+        logger.info(response.rows);
+        return this.mapProductResponse(response);
+    }
+
+    public async createProduct(product: Types.ProductDTO): Promise<any> {
+        console.log(product)
+        const {product_name, description, code, stock, price, photo, category} = product;
         const sql_statement = "select * from createProduct($1, $2, $3, $4, $5, $6, $7);"
         const response = await this.datasource.query(sql_statement, [product_name, description, code, price, photo, stock, category]);
         return {id: response.rows[0].createproduct};
@@ -56,10 +69,9 @@ export class productDao implements Interfaces.ProductDao {
     }
 
     public async userCheckout(userId: number): Promise<string> {
-        const sql_statement = "select * from checkout($1)";
-        const response = await this.datasource.query(sql_statement,userId)
-        logger.log(response)
-        return response
+        const sql_statement = "select * from checkout($1)"
+        const response = await this.datasource.query(sql_statement,[userId])
+        return response.rows
     }
 
     public async updateProduct(data: {id: number, product: Partial<Types.ProductDTO>}): Promise<Types.ProductDTO> {
@@ -70,10 +82,16 @@ export class productDao implements Interfaces.ProductDao {
         return response.rows[0]
     }
 
-    public async deleteProduct(data: {productId: number}) {
-        const sql_statement = "DELETE FROM products WHERE id = $1 RETURNING *"
-        const response = await this.datasource.query(sql_statement,[data.productId]);
-        return response.rows[0];
+    public async deleteProduct(productId: number) {
+        try{
+            const sql_statement = "DELETE FROM products u WHERE u.id IN (SELECT pr.id FROM products pr WHERE pr.id = $1)"
+            const response = await this.datasource.query(sql_statement,[productId]);
+            console.log('delete res', response)
+            return 'Product deleted'
+        }catch(e){
+            console.log(e)
+            return 'Sorry we could not delete the product.'
+        }
     }
 
     public mapProductResponse = (response: QueryResult): Types.ProductDTO[] =>
@@ -88,5 +106,5 @@ export class productDao implements Interfaces.ProductDao {
             photo: row.photo,
             category: row.category
         }
-    });
+    })
 }

@@ -9,9 +9,9 @@ export class AuthDAO implements Interfaces.AuthDao{
         this.datasource = pool;
     }
     public async getUser(email: string) {
-        const sql_statement = "select u.username, u.id, u.email, ur.role, password from users u left join user_roles ur on u.id = ur.user_id where u.email = $1;";
-        const userData = this.datasource.query(sql_statement,[email]); 
-        return userData
+        const sql_statement = "select u.username, u.id, u.email, ur.role, password from users u left join user_roles ur on u.id = ur.user_id where u.email = $1;"
+        const userData = await this.datasource.query(sql_statement,[email])
+        return userData.rows[0]
     }
 
     public async login(email: string, password: string) {

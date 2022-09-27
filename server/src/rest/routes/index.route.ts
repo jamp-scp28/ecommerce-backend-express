@@ -7,5 +7,4 @@ const router = Router()
 router.use("/products", productRoutes)
 router.use("/chat", chatRoutes)
 router.use("/auth", authRoutes)
-
 export default router
