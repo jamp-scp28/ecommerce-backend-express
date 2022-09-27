@@ -38,6 +38,8 @@
     "prom-client": "^14.1.0",
     "prometheus-api-metrics": "^3.2.2",
     "response-time": "^2.3.2",
+    "swagger-jsdoc": "^6.2.5",
+    "swagger-ui-express": "^4.5.0",
     "winston": "^3.8.1",
     "yargs": "^17.5.1"
   },
@@ -54,6 +56,8 @@
     "@types/passport-local": "^1.0.34",
     "@types/response-time": "^2.3.5",
     "@types/supertest": "^2.0.12",
+    "@types/swagger-jsdoc": "^6.0.1",
+    "@types/swagger-ui-express": "^4.1.3",
     "@types/yargs": "^17.0.10",
     "chai": "^4.3.6",
     "mocha": "^10.0.0",

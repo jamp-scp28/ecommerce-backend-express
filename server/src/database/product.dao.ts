@@ -28,23 +28,11 @@ export class productDao implements Interfaces.ProductDao {
     }
 
     public async createProduct(data: {product: Types.ProductDTO}): Promise<any> {
-        const {product_name, description, code, stock, price, photo} = data.product;
-        const sql_statement = "select * from createProduct($1, $2, $3, $4, $5, $6);"
-        const response = await this.datasource.query(sql_statement, [product_name, description, code, price, photo, stock]);
+        const {product_name, description, code, stock, price, photo, category} = data.product;
+        const sql_statement = "select * from createProduct($1, $2, $3, $4, $5, $6, $7);"
+        const response = await this.datasource.query(sql_statement, [product_name, description, code, price, photo, stock, category]);
         return {id: response.rows[0].createproduct};
     }
-    
-    /*old version of endpoint
-    public async createProducts(product_name: string, description: string, code: string, price: number, photo: string, stock: number): Promise<any> {
-        console.log('receiving request to crate product...')
-        console.log(product_name, description, code, price, photo, stock)
-        const sql_statement = "select * from createProduct($1, $2, $3, $4, $5, $6);"
-
-        const response = await this.datasource.query(sql_statement, [product_name, description, code, price, photo, stock]);
-        logger.info(response);
-        const respo = {product_name, description, code, price, photo, stock}
-        return respo;
-    }*/
 
     public async addProductToCart(product_id: number, n_items: number, user_id: number): Promise<string> {
         const sql_statement = "select * from addProductToCart($1, $2, $3);"
@@ -97,7 +85,8 @@ export class productDao implements Interfaces.ProductDao {
             code: row.code,
             stock: row.stock,
             price: row.price,
-            photo: row.photo
+            photo: row.photo,
+            category: row.category
         }
     });
 }

@@ -1,5 +1,14 @@
 import { QueryResult } from "pg";
 
+declare global {
+    namespace Express {
+        interface User {
+            username: string
+            _id?: number
+        }
+    }
+}
+
 export namespace Types{
     export type User ={
         username: string
@@ -15,24 +24,23 @@ export namespace Types{
     }
 
     export type ChatDTO = {
-        id: number;
-        timestamp: Date;
-        email: string;
-        message: string;
+        id: number
+        timestamp: Date
+        email: string
+        message: string
     }
     
     export type ProductDTO = {
-        id: number;
-        product_name: string;
-        description: string;
-        code: string;
-        stock: number;
-        price: number;
-        photo: string;
+        id: number
+        product_name: string
+        description: string
+        code: string
+        stock: number
+        price: number
+        photo: string
+        category: string
     }
 }
-
-
 
 export namespace Interfaces {
 

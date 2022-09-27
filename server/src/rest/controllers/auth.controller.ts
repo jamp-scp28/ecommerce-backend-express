@@ -12,25 +12,93 @@ export class AuthController {
         this.authDAO = new AuthDAO();
     }
 
+    /**
+   * @openapi
+   * /api/v1/auth/login:
+   *   post:
+   *     tags: [Auth]
+   *     description: Login
+   *     requestBody:
+   *      content:
+   *        application/json:
+   *          schema:
+   *            type: object
+   *            properties:
+   *              email:          
+   *                type: string
+   *              password:    
+   *                type: string  
+   *     responses:
+   *       200:
+   *         description: Session token
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: string
+   *       500:
+   *         $ref: '#/components/responses/500'
+   */ 
     public login = async (req: express.Request, res: express.Response)=>{
         const {email, password} = req.body;
         const response: Types.User | null | string = await this.authDAO.login(email, password);
         if(response && typeof response === 'object'){
-            res.redirect('/home')
+            res.status(200).json(response)
         }
         else {
             res.status(500).send({response: "Error login the user."})
         }
     }
 
+    /**
+   * @openapi
+   * /api/v1/auth/register:
+   *   post:
+   *     tags: [Auth]
+   *     description: register new user
+   *     requestBody:
+   *      content:
+   *        application/json:
+   *          schema:
+   *            type: object
+   *            properties:
+   *              username:          
+   *                type: string
+   *              email:    
+   *                type: string  
+   *              password:    
+   *                type: string
+   *              address:    
+   *                type: string
+   *              age:    
+   *                type: number
+   *              phone_number_prefix:    
+   *                type: string
+   *              phone_number:
+   *                type: number 
+   *              avatar:
+   *                type: string
+   *     responses:
+   *       200:
+   *         description: Session token
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: string
+   *       500:
+   *         $ref: '#/components/responses/500'
+   */ 
     public register = async (req: express.Request, res: express.Response)=>{
         const user: Types.User = req.body;
         user.password = encryptPass(user.password!)
-        const response = await this.authDAO.register(user);
-        console.log("controoler data", response);
-        res.status(200).send({userId: response});
+        const newUserId = await this.authDAO.register(user);
+
+        if(newUserId === 0){
+            res.status(500).send({Error: 'User Already Registered.'});
+        }else{
+            res.status(200).send({userId: newUserId});
+        }
     }
-    
+
     public logout = (req: express.Request, res: express.Response) => {
         req.session.destroy( error => {
             if (error) {

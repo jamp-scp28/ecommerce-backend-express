@@ -27,6 +27,10 @@ CREATE TABLE user_roles (
   role TEXT NOT NULL DEFAULT 'user'
 );
 
+CREATE TABLE categories(
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL
+);
 
 CREATE TABLE products (
   id SERIAL PRIMARY KEY,
@@ -39,10 +43,7 @@ CREATE TABLE products (
   category_id INT NOT NULL REFERENCES categories (id) ON DELETE CASCADE
 );
 
-CREATE TABLE categories(
-  id SERIAL PRIMARY KEY,
-  category_name TEXT NOT NULL
-)
+
 
 CREATE TABLE carts (
   id SERIAL PRIMARY KEY,
@@ -79,14 +80,19 @@ CREATE TABLE product_stock (
 
 CREATE OR REPLACE FUNCTION createUser(username TEXT, email TEXT, password TEXT, fullname TEXT, address TEXT, age INT, phone_number_prefix TEXT, phone_number INT, avatar TEXT) RETURNS INTEGER AS
 $$
-declare
+DECLARE
   last_user_id INTEGER;
-begin
-  INSERT INTO users (username, email, password, fullname, address, age, phone_number_prefix, phone_number, avatar) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);
-  select currval('users_id_seq') INTO last_user_id;
-  INSERT INTO carts (user_id,created_date) VALUES (last_user_id,now());
-  INSERT INTO user_roles (user_id, role) VALUES (last_user_id, 'user');
-  return last_user_id;
+BEGIN
+  PERFORM u.id FROM users u WHERE u.email = $2 ;
+  IF NOT found then
+    INSERT INTO users (username, email, password, fullname, address, age, phone_number_prefix, phone_number, avatar) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);
+    SELECT currval('users_id_seq') INTO last_user_id;
+    INSERT INTO carts (user_id,created_date) VALUES (last_user_id,now());
+    INSERT INTO user_roles (user_id, role) VALUES (last_user_id, 'user');
+    return last_user_id;
+  else
+    RETURN 0;
+  end if;
 end;
 $$ language plpgsql;
 
@@ -131,14 +137,17 @@ CREATE OR REPLACE FUNCTION createProduct(
   code TEXT,
   price FLOAT,
   photo TEXT,
-  stock INTEGER
+  stock INTEGER,
+  category TEXT
 ) RETURNS INTEGER AS
 $$
 DECLARE
   last_product_id INTEGER;
+  category_id INTEGER;
 BEGIN
-  INSERT INTO products (created_date, product_name, description, code, price, photo) 
-    VALUES (now(),$1, $2, $3, $4, $5);
+  SELECT id from categories WHERE name = $7 INTO category_id;
+  INSERT INTO products (created_date, product_name, description, code, price, photo, category_id) 
+    VALUES (now(),$1, $2, $3, $4, $5, category_id);
   SELECT currval('products_id_seq') INTO last_product_id;
   INSERT INTO product_stock (product_id, move_date, type_movement, quantity)
     VALUES (last_product_id, now(), 'IN', $6);
@@ -147,13 +156,16 @@ END;
 $$ LANGUAGE PLPGSQL;
 
 -- Users
-select * from createUser('jorgem','jorge@gmail.com','jorge123','Jorge Martinez','Calle de la casa',20,'+34',6123456789,'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png');
+select * from createUser('jorgem','jorge@gmail.com','jorge123','Jorge Molano','Calle de la casa',20,'+34',6123456789,'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png');
 
 select * from createUser('mariah','maria@gmail.com','maria123','Maria Hu','Calle',24,'+45',65484,'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png');
 
 -- products
 
-select * from createProduct('Shoes','Shoes','DDF34',1000,'https://loremflickr.com/640/480/business',2000);
-select * from createProduct('Shoes','Shoes','DDF34',1000,'https://loremflickr.com/640/480/business',2000);
-select * from createProduct('Shoes','Shoes','DDF34',1000,'https://loremflickr.com/640/480/business',2000);
-select * from createProduct('Shoes','Shoes','DDF34',1000,'https://loremflickr.com/640/480/business',2000);
+insert into categories (name) values ('clothing');
+insert into categories (name) values ('technology');
+
+select * from createProduct('Shoes','Shoes','DDF36',1000,'https://loremflickr.com/640/480/business',2000, 'clothing');
+select * from createProduct('Shirt','some shirt','DDF34',1000,'https://loremflickr.com/640/480/business',2000, 'clothing');
+select * from createProduct('Computer','a super computer','DDF39',1000,'https://loremflickr.com/640/480/business',2000, 'technology');
+select * from createProduct('TV','4k tv','DDF30',1000,'https://loremflickr.com/640/480/business',2000, 'technology');

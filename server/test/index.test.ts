@@ -1,11 +1,5 @@
-import DatabaseFactory from "../database/db.factory";
 import { expect } from "chai";
-import request from "supertest";
-import logger from "../rest/utils/logger/logger";
 import axios from "axios";
-import { response } from "express";
-import exp from "constants";
-import { doesNotMatch } from "assert";
 
 const apiEndpoint: String = "http://localhost:8081/api/v1";
 
