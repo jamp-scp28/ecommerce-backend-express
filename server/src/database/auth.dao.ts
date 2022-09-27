@@ -25,7 +25,6 @@ export class AuthDAO implements Interfaces.AuthDao{
         const { username, email, password, fullname, address, age, phone_number_prefix, phone_number, avatar } = user
         const sql_statement_createuser = "select * from createUser($1, $2, $3, $4, $5, $6, $7, $8, $9)"
         const response = await this.datasource.query(sql_statement_createuser,[username, email, password, fullname, address, age, phone_number_prefix, phone_number, avatar])
-        console.log(response.rows[0].createuser)
         return response.rows[0].createuser
     }
     logout(): Promise<any> {

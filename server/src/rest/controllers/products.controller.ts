@@ -2,6 +2,7 @@ import logger from "../utils/logger/logger";
 import express from "express";
 import { productDao } from "../../database/product.dao";
 import { Types, Interfaces} from "../../types"
+import {ProductCheckout, sendMail} from "../utils/config/mailConfig";
 
 export class ProductController { 
     
@@ -233,8 +234,12 @@ export class ProductController {
     public userCheckout = async (req: express.Request, res: express.Response) => {
         logger.info('POST /userCheckout');
         const user: any = req.user;
-        const response = await this.productDAO.userCheckout(user.id) 
-        res.send({response})
+        const response: any = await this.productDAO.userCheckout(user.id) 
+        if (response.checkout !== 0){
+            sendMail(ProductCheckout)
+            return res.status(200).json(response)
+        }
+        return res.status(500).json({message: 'User does not have any product in the cart.'})
     }
 
      /**

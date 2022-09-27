@@ -9,3 +9,8 @@ export interface IProductController {
     updateProduct(...args: any[]): void
     deleteProduct(...args: any[]): void
 }
+
+export interface IOrderController {
+    getOrders(...args: any[]): void
+    getUserOrders(...args: any[]): void
+}

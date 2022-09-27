@@ -40,6 +40,17 @@ export namespace Types{
         photo: string
         category: string
     }
+
+    export type OrderDTO = {
+        id: number,
+        sale_date: Date,
+        user_id: number,
+        cart_id?: number,
+        product_id: number,
+        items: number,
+        price: number,
+        total: number
+    }
 }
 
 export namespace Interfaces {
@@ -76,6 +87,12 @@ export namespace Interfaces {
         updateChat(id: number, chat: Partial<Types.ChatDTO>): Promise<Types.ChatDTO>;
         deleteChat(email: string): Promise<Types.ChatDTO>;
         mapChatResponse?(response: QueryResult): Types.ChatDTO[];
+    }
+
+    export interface OrdersDAO{
+        getOrders(): Promise<Types.OrderDTO[]>;
+        getUserOrders(userId: number): Promise<Types.OrderDTO[]>;
+        mapOrdersResponse?(response: QueryResult): Types.OrderDTO[];
     }
 
     export interface IDatabaseFactory {

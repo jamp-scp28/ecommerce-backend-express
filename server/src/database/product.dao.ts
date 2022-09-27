@@ -71,7 +71,7 @@ export class productDao implements Interfaces.ProductDao {
     public async userCheckout(userId: number): Promise<string> {
         const sql_statement = "select * from checkout($1)"
         const response = await this.datasource.query(sql_statement,[userId])
-        return response.rows
+        return response.rows[0]
     }
 
     public async updateProduct(data: {id: number, product: Partial<Types.ProductDTO>}): Promise<Types.ProductDTO> {

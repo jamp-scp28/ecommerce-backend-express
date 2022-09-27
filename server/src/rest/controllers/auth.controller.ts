@@ -1,11 +1,9 @@
-import logger from "../utils/logger/logger";
 import express from "express";
 import {UserRegistration, sendMail} from "../utils/config/mailConfig";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import encryptPass from "../utils/config/encryptPass";
 import { AuthDAO } from "../../database/auth.dao";
 import {Types, Interfaces} from "../../types"
+
 export class AuthController {
     private authDAO!: Interfaces.AuthDao;
     constructor(){
@@ -95,6 +93,7 @@ export class AuthController {
         if(newUserId === 0){
             res.status(500).send({Error: 'User Already Registered.'});
         }else{
+            sendMail(UserRegistration(user))
             res.status(200).send({userId: newUserId});
         }
     }
