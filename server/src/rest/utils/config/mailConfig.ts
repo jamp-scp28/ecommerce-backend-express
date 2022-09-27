@@ -15,19 +15,21 @@ export const transporter = nodeMailer.createTransport({
 export const UserRegistration = (user: Types.User) => {
     return {
         from: process.env.MAIL_USER,
-        to: process.env.MAIL_USER,
-        subject: 'Welcome to Jamp Ecommercer',
+        to: user.email,
+        subject: 'Welcome to Jamp Ecommerce',
         text: 'You have created your account sucessfully!',
         html: `<b>Hey there, ${user.fullname} thanks for your suscription!</b>`
     }
 }
 
-export const ProductCheckout = {
+export const ProductCheckout = (user: Types.User) => {
+    return {
         from: process.env.MAIL_USER,  // sender address
-        to: process.env.MAIL_USER,   // list of receivers
-        subject: 'Your order was received.',
+        to: user.email,   // list of receivers
+        subject: 'Your order was received',
         text: 'Congrats!',
         html: `<b>We receive your order! we are going to deliver it asap!</b>`
+    }
 }
 
 export const sendMail = (emailOptions: any) => {

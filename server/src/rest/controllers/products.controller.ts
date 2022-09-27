@@ -236,7 +236,7 @@ export class ProductController {
         const user: any = req.user;
         const response: any = await this.productDAO.userCheckout(user.id) 
         if (response.checkout !== 0){
-            sendMail(ProductCheckout)
+            sendMail(ProductCheckout(user))
             return res.status(200).json(response)
         }
         return res.status(500).json({message: 'User does not have any product in the cart.'})

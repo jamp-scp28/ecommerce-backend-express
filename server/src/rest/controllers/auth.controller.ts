@@ -65,6 +65,8 @@ export class AuthController {
    *                type: string  
    *              password:    
    *                type: string
+   *              fullname:    
+   *                type: string
    *              address:    
    *                type: string
    *              age:    
