@@ -13,7 +13,9 @@ product.get("/", productController.getProducts)
 
 product.get("/:id", productController.getProductById)
 
-product.get("/user/cart/", passport.authenticate('jwt', { session: false }), productController.getUserCart)
+product.get("/category/:category", productController.getProductByCategory)
+
+product.get("/user/cart", passport.authenticate('jwt', { session: false }), productController.getUserCart)
 
 product.post("/create", passport.authenticate('jwt', { session: false }), productController.createProduct)
 
